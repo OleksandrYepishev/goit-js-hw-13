@@ -12,15 +12,15 @@ let hits = null;
 
 const fetchPhotosInput = document.getElementById('search-form');
 const galleryContainer = document.querySelector('.gallery');
-const loadMoreBtn = document.querySelector('.load-more');
+// const loadMoreBtn = document.querySelector('.load-more');
 
 
 fetchPhotosInput.addEventListener('submit', onSearch);
-loadMoreBtn.addEventListener('click', nextPage);
+// loadMoreBtn.addEventListener('click', nextPage);
 
 async function onSearch(e) {
-    loadMoreBtn.disabled = false;
-    loadMoreBtn.hidden = false;
+    // loadMoreBtn.disabled = false;
+    // loadMoreBtn.hidden = false;
     resetPage()
     e.preventDefault();
 
@@ -31,9 +31,10 @@ async function onSearch(e) {
         clearGalleryMarkup()
         const photos = await fetchPhotos(searchQuery, page, per_page);
         totalHits = photos.data.totalHits;
+        hits += photos.data.hits.length;
         
         if (totalHits === 0 || searchQuery.trim() === '') {
-            loadMoreBtn.disabled = true;
+            // loadMoreBtn.disabled = true;
                 let message = 'Sorry, there are no images matching your search query. Please try again.';
                return Notiflix.Notify.failure(`${message}`)
             }
@@ -51,6 +52,7 @@ async function onSearch(e) {
 
 async function nextPage() {
     const photos = await fetchPhotos(searchQuery, page, per_page);
+    ifEndImages(photos);
     renderPhotos(photos);
 };
 
@@ -58,10 +60,10 @@ function renderPhotos(photos) {
     
     galleryContainer.insertAdjacentHTML('beforeend', galleryCard(photos));
     incrPage();
-    ifEndImages(photos);
-    if (page > 1) {
-        loadMoreBtn.classList.remove('is-hidden');  
-     }  
+    
+    // if (page > 1) {
+    //     loadMoreBtn.classList.remove('is-hidden');  
+    //  }  
 };
 
  window.addEventListener("scroll", () => {
@@ -74,10 +76,12 @@ function renderPhotos(photos) {
 
 function ifEndImages(photos) {
     hits += photos.data.hits.length;
+    console.log(hits);
+    console.log(totalHits);
     if (hits === totalHits) {
         let message = "We're sorry, but you've reached the end of search results.";
-        loadMoreBtn.hidden = true;
-        Notiflix.Notify.failure(`${message}`);
+        // loadMoreBtn.hidden = true;
+        return Notiflix.Notify.failure(`${message}`);
     }
 };
 
