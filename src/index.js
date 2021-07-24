@@ -4,8 +4,10 @@ import Notiflix from "notiflix";
 import galleryCard from './templates/galleryCard.hbs';
 
 let page = 1;
-const per_page = 4;
+const per_page = 40;
 let searchQuery = [];
+let totalHits = null;
+let hits = null;
 
 
 const fetchPhotosInput = document.getElementById('search-form');
@@ -18,6 +20,7 @@ loadMoreBtn.addEventListener('click', nextPage);
 
 async function onSearch(e) {
     loadMoreBtn.disabled = false;
+    loadMoreBtn.hidden = false;
     resetPage()
     e.preventDefault();
 
@@ -27,7 +30,7 @@ async function onSearch(e) {
     try {
         clearGalleryMarkup()
         const photos = await fetchPhotos(searchQuery, page, per_page);
-        let totalHits = photos.data.totalHits;
+        totalHits = photos.data.totalHits;
         
         if (totalHits === 0 || searchQuery.trim() === '') {
             loadMoreBtn.disabled = true;
@@ -36,6 +39,7 @@ async function onSearch(e) {
             }
         Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
         renderPhotos(photos);
+       
         
        
         
@@ -51,13 +55,33 @@ async function nextPage() {
 };
 
 function renderPhotos(photos) {
+    
     galleryContainer.insertAdjacentHTML('beforeend', galleryCard(photos));
     incrPage();
+    ifEndImages(photos);
     if (page > 1) {
-        loadMoreBtn.classList.remove('is-hidden');
-    }
-   
+        loadMoreBtn.classList.remove('is-hidden');  
+     }  
 };
+
+ window.addEventListener("scroll", () => {
+    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+
+    if (scrollTop + clientHeight > scrollHeight-1) {
+       return nextPage();
+    }
+  });
+
+function ifEndImages(photos) {
+    hits += photos.data.hits.length;
+    if (hits === totalHits) {
+        let message = "We're sorry, but you've reached the end of search results.";
+        loadMoreBtn.hidden = true;
+        Notiflix.Notify.failure(`${message}`);
+    }
+};
+
+
 
 function clearGalleryMarkup() {
     galleryContainer.innerHTML = '';
