@@ -1,3 +1,35 @@
+:root {
+  --timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  --animation-duration: 250ms;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
+    'Helvetica Neue', sans-serif;
+  background-color: #fff;
+  color: #212121;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.is-hidden {
+  display: none;
+}
+
 .search-form {
   display: flex;
   justify-content: center;
@@ -12,6 +44,60 @@
   margin-right: auto;
 }
 
-.load-more.is-hidden {
-  display: none;
+.gallery {
+  margin: 40px auto;
+  display: grid;
+  width: 95%;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-auto-rows: 240px;
+  grid-gap: 20px;
+  list-style: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.photo-link {
+  cursor: default;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  border-radius: 7px;
+
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+}
+
+.photo-card {
+  position: relative;
+  height: 75%;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+}
+
+.gallery__image:hover {
+  transform: scale(1.03);
+}
+
+.gallery__image {
+  height: 100%;
+  width: 100%;
+  transition: transform var(--animation-duration) var(--timing-function);
+}
+
+.info {
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.info-item {
+  margin: 0;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+b {
+  margin-bottom: 10px;
 }
