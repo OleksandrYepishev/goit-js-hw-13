@@ -1,19 +1,20 @@
 import './css/styles.css';
+import '../node_modules/simplelightbox/src/simple-lightbox.scss'
 import fetchPhotos from './js/fetchPhotos';
 import Notiflix from "notiflix";
 import galleryCard from './templates/galleryCard.hbs';
+import SimpleLightbox from "simplelightbox";
 
 let page = 1;
 const per_page = 40;
 let searchQuery = [];
 let totalHits = null;
 let hits = null;
-
+var lightbox = new SimpleLightbox('.gallery a');
 
 const fetchPhotosInput = document.getElementById('search-form');
 const galleryContainer = document.querySelector('.gallery');
 // const loadMoreBtn = document.querySelector('.load-more');
-
 
 fetchPhotosInput.addEventListener('submit', onSearch);
 // loadMoreBtn.addEventListener('click', nextPage);
@@ -40,6 +41,13 @@ async function onSearch(e) {
             }
         Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
         renderPhotos(photos);
+        
+        
+
+        
+        
+        
+        
        
         
        
@@ -49,17 +57,21 @@ async function onSearch(e) {
         }
     
 };
-
+ 
 async function nextPage() {
     const photos = await fetchPhotos(searchQuery, page, per_page);
     ifEndImages(photos);
     renderPhotos(photos);
+    
 };
 
 function renderPhotos(photos) {
     
     galleryContainer.insertAdjacentHTML('beforeend', galleryCard(photos));
     incrPage();
+    lightbox.refresh();
+    
+   
     
     // if (page > 1) {
     //     loadMoreBtn.classList.remove('is-hidden');  
@@ -76,13 +88,13 @@ function renderPhotos(photos) {
 
 function ifEndImages(photos) {
     hits += photos.data.hits.length;
-    console.log(hits);
-    console.log(totalHits);
+
     if (hits === totalHits) {
         let message = "We're sorry, but you've reached the end of search results.";
         // loadMoreBtn.hidden = true;
-        return Notiflix.Notify.failure(`${message}`);
+       return Notiflix.Notify.failure(`${message}`);
     }
+    
 };
 
 
@@ -99,3 +111,4 @@ function incrPage() {
 function resetPage(){
     page = 1;
  };
+
