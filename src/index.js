@@ -41,7 +41,7 @@ async function onSearch(e) {
             }
         Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
         renderPhotos(photos);
-        
+      
         
 
         
@@ -62,6 +62,8 @@ async function nextPage() {
     const photos = await fetchPhotos(searchQuery, page, per_page);
     ifEndImages(photos);
     renderPhotos(photos);
+    scrollSmooth();
+      
     
 };
 
@@ -70,8 +72,7 @@ function renderPhotos(photos) {
     galleryContainer.insertAdjacentHTML('beforeend', galleryCard(photos));
     incrPage();
     lightbox.refresh();
-    
-   
+      
     
     // if (page > 1) {
     //     loadMoreBtn.classList.remove('is-hidden');  
@@ -112,3 +113,12 @@ function resetPage(){
     page = 1;
  };
 
+function scrollSmooth() {
+    const cardHeight = document.querySelector('.gallery').firstElementChild.getBoundingClientRect().height;
+
+        window.scrollBy({
+         top: cardHeight * 2,
+         behavior: 'smooth',
+         });
+        
+}
